@@ -1,0 +1,50 @@
+		{% extends "layout.html" %}
+		{% block body %}
+		    
+		    <form action="/devices/add" method="post" class="panel-section">
+		      <dl>
+		        <dt>Nome:
+		        <dd><input type="text" size="30" name="name">
+							<dt>Mascara:
+		        <dd><input type="text" size="30" name="mask">
+		        <dt>Id do Microcontrolador:
+		        <dd><input type="text" size="30" name="micro_id">
+		        <dt>Tipo:
+		        <dd><input type="text" size="30" name="kind">
+		        <dt>Localizacao:
+		        <dd><input type="text" size="30" name="localization">
+		        <dd><input type="submit" value="adicionar">
+		      </dl>
+		    </form>
+		   
+		   <p> Dispositivos </p>
+		  <div>
+		  <table style="width:100%">
+		 	 {% if showing_devices %}
+		 	 <tr style="background-color:#E8E8E8">
+					<th>Nome</th>	
+					<th>Mascara</th>
+					<th>Micro Id</th>
+					<th>Tipo</th>
+					<th>Localizacao</th>
+					<th>Status</th> 	 
+					
+		 	 </tr>	  
+		  {% endif %}	 	 
+		  {% for device in showing_devices %}
+				<tr>
+					<th>{{ device[0] }}</th>	
+					<th>{{ device[1] }}</th>
+					<th>{{ device[2] }}</th>
+					<th>{{ device[3] }}</th>
+					<th>{{ device[4] }}</th>
+					<th>{{ device[5] }}</th>					
+				
+			 	</tr>
+		  {% else %}
+		    <em> Nao ha nada no banco ate o momento</em>
+		  {% endfor %}
+		  </div>
+		  </table>
+		  
+		{% endblock %}

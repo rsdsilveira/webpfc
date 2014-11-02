@@ -1,0 +1,15 @@
+<!doctype html>
+<title>PFC dos Brother</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<script type="text/javascript" src="{{url_for('static', filename='jquery.js') }}"></script>
+<script> $SCRIPT_ROOT = {{ request.script_root|tojson|safe}};</script>
+<div class="page">
+      
+				<p><h1><img src="http://i.imgur.com/2ACzD1Q.jpg" width="30" height="30"> Casa Inteligente</h1></p>
+  		  <span><a href="/house/panel" class="menu">ver casa</a> <a href="/devices/panel" class="menu">ver dispositivos</a></span>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    <script>$(".flash").fadeOut(1000)</script>
+  {% endfor %}
+  {% block body %}{% endblock %}
+</div>
