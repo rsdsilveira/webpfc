@@ -18,4 +18,14 @@ create table events (
   mic_id integer,
   occurred_at timestamp,
   foreign key(mic_id) references devices(micro_id)
-); 
+);
+
+create table houseStates(
+  db_id integer primary key autoincrement,
+  user text,
+  room text,
+  light boolean,
+  temperature integer,
+  curtain boolean,
+  hour timestamp
+);
