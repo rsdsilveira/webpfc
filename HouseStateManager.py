@@ -1,5 +1,6 @@
 __author__ = 'Kaike'
 import DatabaseService
+import DevicesControl
 from Model import HouseState
 from werkzeug.contrib.cache import SimpleCache
 import datetime
@@ -7,8 +8,9 @@ import datetime
 class HouseStateManager (object):
     def __init__(self):
         self.databaseService = DatabaseService()
-        self.save_current_house_state(HouseState(0, self.format_time(datetime.time.now()), 0, 0, 0, 0))
-        self.save_current_house_state(HouseState(1, self.format_time(datetime.time.now()), 0, 0, 0, 0))
+        self.devicesControl = DevicesControl()
+        self.save_current_house_state(HouseState(0, datetime.time.now(), 0, 0, 0, 0))
+        self.save_current_house_state(HouseState(1, datetime.time.now(), 0, 0, 0, 0))
 
     def save_current_house_state(self, houseState):
         SimpleCache().set("current_house_state", houseState)
@@ -45,9 +47,13 @@ class HouseStateManager (object):
 
     def change_temperature(self, new_temperature):
         self.temperature = new_temperature
+        self.devicesControl.change_temperature(new_temperature)
+
 
     def change_light(self, new_light):
         self.light = new_light
+        self.devicesControl.change_light(new_light)
 
     def change_curtain(self, new_curtain):
         self.curtain = new_curtain
+        self.change_curtain(new_curtain)
