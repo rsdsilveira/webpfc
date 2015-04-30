@@ -5,7 +5,6 @@ from sqlite3 import dbapi2 as sqlite3
 class DatabaseService(object):
     DATABASE = 'database.db'
 
-
     def get_db(self):
         return sqlite3.connect(self.DATABASE)
 
