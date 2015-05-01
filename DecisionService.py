@@ -10,12 +10,17 @@ class DecisionService(object):
         self.houseStateManager = HouseStateManager()
         self.devicesControl = DevicesControl()
 
-    def makeDecision(self):
+    def makeDecision(self,  house_state=None):
+
         rules = self.houseStateRulesManager.getHouseStateRules()
-        currentState = self.houseStateManager.getCurrentHouseState()
+        actual_state = {}
+        if house_state.room == 0:
+            actual_state = self.houseStateManager.get_current_office_state()
+        if house_state.room == 1:
+            actual_state = self.houseStateManager.get_current_bedroom_state()
 
         targetRule = {}
-        #for rule in rules:
-        #    if rule.room == currentState.room and rule.hour == currentState.hour
-        #        for user in rule.users:
+#        for rule in rules:
+#            if rule.room == actual_state.room and rule.hour == actual_state.hour
+#                for user in rule.users:
 
