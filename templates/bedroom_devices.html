@@ -1,6 +1,7 @@
 		{% extends "layout.html" %}
 		{% block body %}
-		
+
+        <br/>
 		<fieldset>
 			<legend>Dispositivos</legend>
 				Lampada:
@@ -46,7 +47,8 @@
 							<option value="25">
 						</datalist>
 					</div>
-					
+
+
 			<script>
 				function showVal(val){
 					
@@ -111,7 +113,29 @@
 			</style>
 		</fieldset>
 		
-		
-		   
-		  
+
+        <fieldset>
+            <legend>Usuários que estao no comodo</legend>
+            <div>
+                <select id="possibleUsers">
+                    <option value="1">Carlos</option>
+                    <option value="2">Silveira</option>
+                    <option value="3">Cesar</option>
+                    <option value="4">Convidado</option>
+                </select>
+                <input type="button" value="Adicionar" onclick="addUser()">
+            </div>
+            <div>
+                <ol id="users_at_room">
+                </ol>
+            </div>
+
+            <script>
+
+
+            </script>
+
+
+        </fieldset>
+
 		{% endblock %}
