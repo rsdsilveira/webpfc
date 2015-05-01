@@ -6,6 +6,10 @@ from flask import Flask, jsonify, request, session, g, redirect, url_for, abort,
      render_template, flash
 from werkzeug.contrib.cache import SimpleCache
 
+import HouseStateManager
+import DecisionService
+import DevicesControl
+
 ####### ------------------ APP START CONFIGURATION -------------------- #######
 
 DATABASE = 'database.db'
@@ -31,12 +35,12 @@ def init_db():
     db = get_db()
     if db is None:
         return 'Nao ha conexao com o banco'
-    with app.open_resource('schema.sql', mode='r') as fileToCreateTables:
-        db.cursor().executescript(fileToCreateTables.read())
-        db.commit()
-    with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
-        db.cursor().executescript(fileToFillStubs.read())
-        db.commit()
+    #with app.open_resource('schema.sql', mode='r') as fileToCreateTables:
+    #    db.cursor().executescript(fileToCreateTables.read())
+    #    db.commit()
+    #with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
+    #    db.cursor().executescript(fileToFillStubs.read())
+    #    db.commit()
     
         
 
@@ -112,12 +116,12 @@ def add_device():
     
 @app.route('/actions/do')
 def do_action_for_device():
-			micro_id = request.args.get('micro_id',0, type=int) 
-			ocurred_date = date.now()
-			# finge que interagiu
-			# salva evento no banco - quem fez foi a casa entao operator = 1
+#			micro_id = request.args.get('micro_id',0, type=int)
+#			ocurred_date = date.now()
+#			# finge que interagiu
+#			# salva evento no banco - quem fez foi a casa entao operator = 1
 			# muda status no cache
-			return jsonify(result='A')			     
+			return jsonify(result='A')
 			
 			
 @app.route('/status/all')
@@ -146,12 +150,44 @@ def show_house_panel():
     
     
 # cur = db.execute('select status, operator, mic_id, occurred_at from events order by db_id')
-         
+
+
+# ------------ new controller ---------------
+@app.route('/users')
+def users_by_room():
+    if(SimpleCache().get("users_localizations") is None):
+        SimpleCache().set("users_localizations", "1")
+    #render_template()
+
+@app.route('/office/devices')
+def office_devices_control():
+    return render_template("office_devices.html")
+
+@app.route('/bedroom/devices')
+def bedroom_devices_control():
+    return render_template("bedroom_devices.html")
+
+
+@app.route('/light/update')
+def light_update(new_light):
+    return True
+
+@app.route('/curtain/update')
+def curtain_update(new_curtain):
+    return True
+
+
 
 ####### ------------------------ INITIALIZE ----------------------------- #######
 
 if __name__ == "__main__":
     init_db()
-    app.run(host='200.20.121.234', port=2222, debug=True)
+    #app.run(host='200.20.121.234', port=2222, debug=True)
+    app.run(host='127.0.0.1', port=2222, debug=True)
 
+
+def __init__(self):
+    self.houseStateManager = HouseStateManager()
+    self.decisionService = DecisionService()
+    self.devicesControl = DevicesControl()
 
