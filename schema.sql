@@ -20,12 +20,23 @@ create table events (
   foreign key(mic_id) references devices(micro_id)
 );
 
-create table houseStates(
-  db_id integer primary key autoincrement,
-  user text,
-  room text,
-  light boolean,
-  temperature integer,
-  curtain boolean,
-  hour timestamp
-);
+--create table houseStates(
+--  db_id integer primary key autoincrement,
+--  user text,
+--  room text,
+--  light boolean,
+--  temperature integer,
+--  curtain boolean,
+--  hour timestamp
+--);
+
+
+--create table houseStateRules(
+--  db_id integer primary key autoincrement,
+--  user text,
+--  room text,
+--  light boolean,
+--  temperature integer,
+--  curtain boolean,
+--  hour timestamp
+--);

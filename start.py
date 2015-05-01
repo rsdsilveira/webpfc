@@ -170,11 +170,11 @@ def bedroom_devices_control():
 
 @app.route('/light/update')
 def light_update(new_light):
-    return True
+    return jsonify(value=new_light)
 
 @app.route('/curtain/update')
-def curtain_update(new_curtain):
-    return True
+def curtain_update(new_curtain = 0):
+    return jsonify(value= new_curtain)
 
 
 

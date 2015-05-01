@@ -11,7 +11,6 @@ class DecisionService(object):
         self.devicesControl = DevicesControl()
 
     def makeDecision(self,  house_state=None):
-
         rules = self.houseStateRulesManager.getHouseStateRules()
         actual_state = {}
         if house_state.room == 0:
