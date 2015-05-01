@@ -24,6 +24,14 @@ app.config.from_envvar('FLASKR_SETTINGS', silent = True)
 
 
 
+####### --------------------init---------------------------------------######
+
+
+houseStateManager = HouseStateManager()
+decisionService = DecisionService()
+devicesControl = DevicesControl()
+
+
 
 ####### ------------------------ DATABASE ----------------------------- #######
 
@@ -169,11 +177,13 @@ def bedroom_devices_control():
 
 
 @app.route('/light/update')
-def light_update(new_light):
+def light_update(new_light = 0):
+    houseStateManager.change_light(new_light)
     return jsonify(value=new_light)
 
 @app.route('/curtain/update')
 def curtain_update(new_curtain = 0):
+    houseStateManager.change_curtain(new_curtain)
     return jsonify(value= new_curtain)
 
 
@@ -184,10 +194,4 @@ if __name__ == "__main__":
     init_db()
     #app.run(host='200.20.121.234', port=2222, debug=True)
     app.run(host='127.0.0.1', port=2222, debug=True)
-
-
-def __init__(self):
-    self.houseStateManager = HouseStateManager()
-    self.decisionService = DecisionService()
-    self.devicesControl = DevicesControl()
 
