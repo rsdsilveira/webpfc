@@ -1,11 +1,11 @@
 __author__ = 'Kaike'
 #from sklearn import svm
 #from Model import HouseState
-import DatabaseService
+import database_service
 
 class HouseStateRulesManager(object):
     def __init__(self):
-        self.databaseService = DatabaseService()
+        self.databaseService = database_service.DatabaseService()
 
     def create_rules(self):
         rules = self.databaseService.get_house_states()

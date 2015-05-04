@@ -1,14 +1,14 @@
 __author__ = 'Kaike'
 
-import HouseStateManager
-import HouseStateRulesManager
-import DevicesControl
+import house_state_manager
+import house_state_rules_manager
+import devices_control
 
 class DecisionService(object):
     def __init__(self):
-        self.houseStateRulesManager = HouseStateRulesManager()
-        self.houseStateManager = HouseStateManager()
-        self.devicesControl = DevicesControl()
+        self.houseStateRulesManager = house_state_rules_manager.HouseStateRulesManager()
+        self.houseStateManager = house_state_manager.HouseStateManager()
+        self.devicesControl = devices_control.DevicesControl()
 
     def makeDecision(self,  house_state=None):
         rules = self.houseStateRulesManager.getHouseStateRules()

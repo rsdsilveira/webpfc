@@ -6,9 +6,11 @@ from flask import Flask, jsonify, request, session, g, redirect, url_for, abort,
      render_template, flash
 from werkzeug.contrib.cache import SimpleCache
 
-import HouseStateManager
-import DecisionService
-import DevicesControl
+import house_state_manager
+#from HouseStateManager import HouseStateManager
+#from house_state_manager import HouseStateManager
+import decision_service
+import devices_control
 
 ####### ------------------ APP START CONFIGURATION -------------------- #######
 
@@ -27,17 +29,15 @@ app.config.from_envvar('FLASKR_SETTINGS', silent = True)
 ####### --------------------init---------------------------------------######
 
 
-houseStateManager = HouseStateManager()
-decisionService = DecisionService()
-devicesControl = DevicesControl()
 
-
+houseStateManager = house_state_manager.HouseStateManager()
+decisionService = decision_service.DecisionService()
+devicesControl = devices_control.DevicesControl()
 
 ####### ------------------------ DATABASE ----------------------------- #######
 
 def get_db():
     return sqlite3.connect(DATABASE)
-    
 
 def init_db():
     db = get_db()
@@ -50,7 +50,6 @@ def init_db():
     #    db.cursor().executescript(fileToFillStubs.read())
     #    db.commit()
     
-        
 
 ####### ------------------------ ROUTES ----------------------------- #######
 
@@ -165,7 +164,7 @@ def show_house_panel():
 def users_by_room():
     if(SimpleCache().get("users_localizations") is None):
         SimpleCache().set("users_localizations", "1")
-    #render_template()
+    #return render_template('house_panel.html')
 
 @app.route('/office/devices')
 def office_devices_control():
@@ -175,18 +174,36 @@ def office_devices_control():
 def bedroom_devices_control():
     return render_template("bedroom_devices.html")
 
-
-@app.route('/light/update')
-def light_update(new_light = 0):
-    houseStateManager.change_light(new_light)
+@app.route('/office/light/update/<new_light>')
+def office_light_update(new_light):
+    house_state_manager.HouseStateManager.change_office_light(new_light)
     return jsonify(value=new_light)
 
-@app.route('/curtain/update')
-def curtain_update(new_curtain = 0):
-    houseStateManager.change_curtain(new_curtain)
+@app.route('/bedroom/light/update/<new_light>')
+def bedroom_light_update(new_light):
+    houseStateManager.change_bedroom_light(new_light)
+    return jsonify(value=new_light)
+
+@app.route('/office/curtain/update/<new_curtain>')
+def office_curtain_update(new_curtain):
+    houseStateManager.change_office_curtain(new_curtain)
+    return jsonify(value= new_curtain)
+
+@app.route('/bedroom/curtain/update/<new_curtain>')
+def bedroom_curtain_update(new_curtain):
+    houseStateManager.change_bedroom_curtain(new_curtain)
     return jsonify(value= new_curtain)
 
 
+@app.route('/office/temperature/update/<new_temperature>')
+def office_temperature_update(new_temperature):
+    houseStateManager.change_office_temperature(new_temperature)
+    return jsonify(value=new_temperature)
+
+@app.route('/bedroom/temperature/update/<new_temperature>')
+def bedroom_temperature_update(new_temperature):
+    houseStateManager.change_bedroom_temperature(new_temperature)
+    return jsonify(value=new_temperature)
 
 ####### ------------------------ INITIALIZE ----------------------------- #######
 
@@ -194,4 +211,12 @@ if __name__ == "__main__":
     init_db()
     #app.run(host='200.20.121.234', port=2222, debug=True)
     app.run(host='127.0.0.1', port=2222, debug=True)
+
+    with app.app_context():
+        houseStateManager = house_state_manager()
+        decisionService = decision_service()
+        devicesControl = devices_control()
+
+
+
 
