@@ -1,6 +1,6 @@
 __author__ = 'Kaike'
 
-class HouseState(object):
+class RoomState(object):
     def __init__(self, room, hour, users, light, temperature, curtain):
         self.room = room
         self.hour = hour
@@ -9,7 +9,7 @@ class HouseState(object):
         self.temperature = temperature
         self.curtain = curtain
 
-class HouseStateRule(object):
+class RoomStateRule(object):
     def __init__(self, room, hour, user, light, temperature, curtain):
         self.room = room
         self.hour = hour

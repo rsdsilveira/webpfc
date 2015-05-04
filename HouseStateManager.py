@@ -1,7 +1,7 @@
 __author__ = 'Kaike'
 import DatabaseService
 import DevicesControl
-from Model import HouseState
+from Model import RoomState
 from werkzeug.contrib.cache import SimpleCache
 import datetime
 
@@ -9,8 +9,8 @@ class HouseStateManager (object):
     def __init__(self):
         self.databaseService = DatabaseService()
         self.devicesControl = DevicesControl()
-        self.save_current_house_state(HouseState(0, datetime.time.now(), 0, 0, 0, 0))
-        self.save_current_house_state(HouseState(1, datetime.time.now(), 0, 0, 0, 0))
+        self.save_current_house_state(RoomState(0, datetime.time.now(), 0, 0, 0, 0))
+        self.save_current_house_state(RoomState(1, datetime.time.now(), 0, 0, 0, 0))
 
     def save_current_house_state(self, houseState):
         SimpleCache().set("current_house_state", houseState)
