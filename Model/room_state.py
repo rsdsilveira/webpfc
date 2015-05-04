@@ -19,7 +19,6 @@ class RoomStateRule(object):
         self.curtain = curtain
 
 
-
 # rooms
 #
 #  office = 0

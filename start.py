@@ -166,11 +166,11 @@ def users_by_room():
         SimpleCache().set("users_localizations", "1")
     #return render_template('house_panel.html')
 
-@app.route('/office/devices')
+@app.route('/office')
 def office_devices_control():
-    return render_template("office_devices.html")
+    return render_template("office.html")
 
-@app.route('/bedroom/devices')
+@app.route('/bedroom')
 def bedroom_devices_control():
     return render_template("bedroom_devices.html")
 
