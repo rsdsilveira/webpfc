@@ -30,8 +30,8 @@ class HouseStateRulesManager(object):
 
     def getHouseStateRules(self, roomState):
         roomName = "office" if roomState.room == 0 else "bedroom"
-        # na linha abaixo coloquei roomState[0].user, mas e se um roomState tem mais de um user?
-        decisionTreeEntries = [roomState[0].user,roomState.room, roomState.hour]
+        # na linha abaixo coloquei roomState.users[0], mas e se um roomState tem mais de um user?
+        decisionTreeEntries = [roomState.users[0],roomState.room, roomState.hour]
         roomStateRuleResult = RoomStateRule()
         
         with open(roomName + "Light" + '.plk', 'rb') as f:
@@ -50,8 +50,8 @@ class HouseStateRulesManager(object):
             f.close()
             
         roomStateRuleResult.hour = roomState.hour
-        # na linha abaixo coloquei roomState[0].user, mas e se um roomState tem mais de um user?
-        roomStateRuleResult.user = roomState.user[0]
+        # na linha abaixo coloquei roomState.users[0], mas e se um roomState tem mais de um user?
+        roomStateRuleResult.user = roomState.users[0]
         roomStateRuleResult.room = roomState.room
         
         return roomStateRuleResult            
