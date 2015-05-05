@@ -24,9 +24,9 @@ class DatabaseService(object):
         if db is None:
             return False
         cur = db.execute('select room, user, light, temperature, hour, curtain from houseStates order by db_id')
-        return self.parseQueryResultToList(cur.fetchall())
+        return self.__parse_query_result_to_data_frame(cur.fetchall())
 
-    def parseQueryResultToList(resultFromDb):
+    def __parse_query_result_to_data_frame(resultFromDb):
         result = list()
         for row in resultFromDb:
             currentRow = {}

@@ -8,50 +8,20 @@ class DevicesControl(object):
     def __init__(self):
         return
 
-    def change_bedroom_temperature(self, value):
-        port =  self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend("bedroomTemperature",value)
-        self.sendSerialMessage(port, serialMessage)
-        return
-
-    def change_bedroom_light(self, value):
+    def change_device(self, value, deviceName, roomName):
         port = self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend("bedroomLight", value)
+        serialMessage = self.getSerialMessageToSend(deviceName, roomName, value)
         self.sendSerialMessage(port, serialMessage)
         return
 
-    def change_bedroom_curtain(self,value):
-        port = self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend("bedroomCurtain", value)
-        self.sendSerialMessage(port, serialMessage)
-        return
-
-    def change_office_temperature(self, value):
-        port = self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend("officeTemperature", value)
-        self.sendSerialMessage(port, serialMessage)
-        return
-
-    def change_office_light(self, value):
-        port = self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend("officeLight", value)
-        self.sendSerialMessage(port, serialMessage)
-        return
-
-    def change_office_curtain(self, value):
-        port = self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend("officeCurtain", value)
-        self.sendSerialMessage(port, serialMessage)
-        return
-
-    def sendSerialMessage(self,port, messageArray):
+    def __sendSerialMessage(self,port, messageArray):
         time.sleep(0.5)
         for charSerial in messageArray:
             port.write(charSerial)
             time.sleep(0.1)
 
 
-    def getSerialPort(self):
+    def __getSerialPort(self):
         port = serial.Serial("/dev/ttyAMA0", baudrate = 115200, timeout = 3.0)
         if(port.isOpen() == False):
             port.open()
@@ -62,19 +32,19 @@ class DevicesControl(object):
         return port
 
 
-    def getSerialMessageToSend(self, deviceName, valueToChange):
+    def __getSerialMessageToSend(self, deviceName, roomName, valueToChange):
         serialMessage = []
-        if (deviceName == "bedroomLight"):
+        if (roomName == "bedroom" and deviceName == "light"):
             serialMessage = [chr(3), chr(34), chr(0), chr(2), chr(13)] if valueToChange == 0 else [chr(3), chr(34), chr(0), chr(1), chr(13)]
-        if (deviceName == "bedroomCurtain"):
+        if (roomName == "bedroom" and deviceName == "temperature"):
             serialMessage = [chr(), chr(), chr(), chr(), chr()]
-        if (deviceName == "bedroomTemperature"):
+        if (roomName == "bedroom" and deviceName == "curtain"):
             serialMessage = [chr(), chr(), chr(), chr(), chr()]
-        if (deviceName == "officeLight"):
+        if (roomName == "office" and deviceName == "light"):
             serialMessage = [chr(), chr(), chr(), chr(), chr()]
-        if (deviceName == "officeCurtain"):
+        if (roomName == "office" and deviceName == "temperature"):
             serialMessage = [chr(), chr(), chr(), chr(), chr()]
-        if (deviceName == "officeTemperature"):
+        if (roomName == "office" and deviceName == "curtain"):
             serialMessage = [chr(), chr(), chr(), chr(), chr()]
 
         return serialMessage

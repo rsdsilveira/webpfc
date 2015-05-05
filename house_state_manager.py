@@ -9,8 +9,8 @@ class HouseStateManager (object):
     def __init__(self):
         self.databaseService = database_service.DatabaseService
         self.devicesControl = devices_control.DevicesControl
-        self.save_current_office_state(room_state.RoomState(0, datetime.datetime.now(), 0, 0, 0, 0))
-        self.save_current_bedroom_state(room_state.RoomState(1, datetime.datetime.now(), 0, 0, 0, 0))
+        self.save_current_office_state(room_state.RoomState("office", datetime.datetime.now(), 0, 0, 0, 0))
+        self.save_current_bedroom_state(room_state.RoomState("bedroom", datetime.datetime.now(), 0, 0, 0, 0))
 
     def save_current_office_state(self, houseState):
         SimpleCache().set("current_office_state", houseState)

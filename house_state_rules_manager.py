@@ -26,9 +26,9 @@ class HouseStateRulesManager(object):
                 treeResult.fit(history.filter(regex= 'user|room|hour'), history.filter(regex= deviceName))
                 with open(deviceName + '.plk', 'wb') as f:
                     pickle.dump(treeResult, f)
-                self.exportDecisionTreeToPDF(treeResult, deviceName, device)
+                self.export_decision_tree_to_PDF(treeResult, deviceName, device)
 
-    def getHouseStateRules(self, roomState):
+    def get_room_rule_to_apply(self, roomState):
         roomName = "office" if roomState.room == 0 else "bedroom"
         decisionTreeEntries = [roomState.users[0],roomState.room, roomState.hour]
         roomStateRuleResult = RoomStateRule()
@@ -54,7 +54,7 @@ class HouseStateRulesManager(object):
         
         return roomStateRuleResult
 
-    def exportDecisionTreeToPDF(self, decisionTree, treeName, targetedVariableNameFromTree):
+    def export_decision_tree_to_PDF(self, decisionTree, treeName, targetedVariableNameFromTree):
         fileName = treeName + '.dot'
         with open(fileName,'w') as f:
             f = decisionTree.export_graphviz(clf, out_file = f, feature_names = ['usuario','comodo','hora',targetedVariableNameFromTree])

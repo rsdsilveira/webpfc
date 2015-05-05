@@ -10,16 +10,19 @@ class DecisionService(object):
         self.houseStateManager = house_state_manager.HouseStateManager()
         self.devicesControl = devices_control.DevicesControl()
 
-    def makeDecision(self,  house_state=None):
-        rules = self.houseStateRulesManager.getHouseStateRules()
-        actual_state = {}
-        if house_state.room == 0:
-            actual_state = self.houseStateManager.get_current_office_state()
-        if house_state.room == 1:
-            actual_state = self.houseStateManager.get_current_bedroom_state()
 
-        targetRule = {}
-#        for rule in rules:
-#            if rule.room == actual_state.room and rule.hour == actual_state.hour
-#                for user in rule.users:
+    def make_decision(self,  roomState):
+        roomName = "bedroom" if roomState.room == 0 else "office"
+
+        actual_state = self.houseStateManager.get_current_bedroom_state() if roomState.room == 0 else self.houseStateManager.get_current_bedroom_state()
+        rule_to_apply = self.houseStateRulesManager.get_room_rule_to_apply(roomState)
+
+        if(rule_to_apply.curtain == actual_state.curtain):
+            self.devicesControl.change_device(rule_to_apply.curtain, "curtain", roomName)
+
+        if (rule_to_apply.light == actual_state.light):
+            self.devicesControl.change_device(rule_to_apply.light, "light", roomName)
+
+        if (rule_to_apply.temperature == actual_state.temperature):
+            self.devicesControl.change_device(rule_to_apply.temperature, "light", roomName)
 
