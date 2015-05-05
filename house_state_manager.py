@@ -35,9 +35,9 @@ class HouseStateManager (object):
 
 
     def format_current_time(self):
-        formatted_time = datetime.datetime.now()
+        formatted_time = float(datetime.datetime.now().hour)
         if datetime.datetime.now().minute > 30:
-            formatted_time += 0.5
+            formatted_time = formatted_time + 0.5
         return formatted_time
 
     def change_office_temperature(self, new_temperature):
