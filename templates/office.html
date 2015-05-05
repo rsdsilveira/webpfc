@@ -88,9 +88,14 @@
             </div>
 
             <script>
+                var baseUrl = location.href;
                 function addUser(){
                     newUser = document.getElementById("possibleUsers");
                     // fazer requisição com newUser.value
+
+                    $.ajax({
+                        url:baseUrl+"/add/"+newUser.value
+                    });
 
                     $("#usersList").append('<tr><td>'+newUser[newUser.selectedIndex].text+'</td><td><button onclick=removeUser(this,'+newUser.value+')>Remover</button></td></tr>');
 
@@ -102,6 +107,11 @@
                     var i = order.parentNode.parentNode.rowIndex;
                     document.getElementById("usersList").deleteRow(i);
                     // fazer requisição com id
+                    $.ajax({
+                        url:baseUrl+"/remove/"+id,
+                        success:function(resp){alert(resp);}
+                    });
+
                 }
 
             </script>
