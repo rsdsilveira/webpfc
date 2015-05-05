@@ -98,18 +98,14 @@
                     });
 
                     $("#usersList").append('<tr><td>'+newUser[newUser.selectedIndex].text+'</td><td><button onclick=removeUser(this,'+newUser.value+')>Remover</button></td></tr>');
-
-
                 }
 
                 function removeUser(order,id){
-
                     var i = order.parentNode.parentNode.rowIndex;
                     document.getElementById("usersList").deleteRow(i);
                     // fazer requisição com id
                     $.ajax({
-                        url:baseUrl+"/remove/"+id,
-                        success:function(resp){alert(resp);}
+                        url:baseUrl+"/remove/"+id
                     });
 
                 }
