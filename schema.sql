@@ -1,5 +1,7 @@
 drop table if exists devices;
 drop table if exists events;
+drop table if exists houseStates;
+
 
 create table devices (
   db_id integer primary key autoincrement,
@@ -20,15 +22,15 @@ create table events (
   foreign key(mic_id) references devices(micro_id)
 );
 
---create table houseStates(
---  db_id integer primary key autoincrement,
---  user text,
---  room text,
---  light boolean,
---  temperature integer,
---  curtain boolean,
---  hour timestamp
---);
+create table houseStates(
+  db_id integer primary key autoincrement,
+  [user] integer,
+  room integer,
+  light boolean,
+  temperature integer,
+  curtain boolean,
+  hour timestamp
+);
 
 
 --create table houseStateRules(

@@ -43,12 +43,12 @@ def init_db():
     db = get_db()
     if db is None:
         return 'Nao ha conexao com o banco'
-    #with app.open_resource('schema.sql', mode='r') as fileToCreateTables:
-    #    db.cursor().executescript(fileToCreateTables.read())
-    #    db.commit()
-    #with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
-    #    db.cursor().executescript(fileToFillStubs.read())
-    #    db.commit()
+    with app.open_resource('schema.sql', mode='r') as fileToCreateTables:
+        db.cursor().executescript(fileToCreateTables.read())
+        db.commit()
+    with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
+        db.cursor().executescript(fileToFillStubs.read())
+        db.commit()
     
 
 ####### ------------------------ ROUTES ----------------------------- #######
@@ -204,6 +204,24 @@ def office_temperature_update(new_temperature):
 def bedroom_temperature_update(new_temperature):
     houseStateManager.change_bedroom_temperature(new_temperature)
     return jsonify(value=new_temperature)
+
+@app.route('/office/<user>')
+def add_user_to_office(new_user):
+    office_state = houseStateManager.get_current_office_state()
+    office_state.users.append(new_user)
+    houseStateManager.save_current_office_state(office_state)
+    if len(office_state.users) == 1:
+        decisionService.makeDecision(office_state)
+    return jsonify(value=True)
+
+
+def remove_user_from_office(user):
+    office_state = houseStateManager.get_current_office_state()
+    office_state.users.remove(user)
+    houseStateManager.save_current_office_state()
+
+
+
 
 ####### ------------------------ INITIALIZE ----------------------------- #######
 
