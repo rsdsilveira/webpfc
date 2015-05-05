@@ -211,7 +211,7 @@ def add_user_to_office(new_user):
     office_state.users.append(new_user)
     houseStateManager.save_current_office_state(office_state)
     if len(office_state.users) == 1:
-        decisionService.makeDecision(office_state)
+        decisionService.make_decision(office_state)
     return jsonify(value=True)
 
 @app.route('/office/remove/<user>')
