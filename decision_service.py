@@ -12,17 +12,27 @@ class DecisionService(object):
 
 
     def make_decision(self,  roomState):
-        roomName = "bedroom" if roomState.room == 0 else "office"
+        roomName = "office" if roomState.room == 0 else "bedroom"
 
-        actual_state = self.houseStateManager.get_current_bedroom_state() if roomState.room == 0 else self.houseStateManager.get_current_bedroom_state()
+        actual_state = self.houseStateManager.get_current_office_state() if roomName == "office" else self.houseStateManager.get_current_bedroom_state()
         rule_to_apply = self.houseStateRulesManager.get_room_rule_to_apply(roomState)
 
         if(rule_to_apply.curtain == actual_state.curtain):
-            self.devicesControl.change_device(rule_to_apply.curtain, "curtain", roomName)
+            if(roomName == "bedroom"):
+                self.houseStateManager.change_bedroom_curtain(rule_to_apply.curtain)
+            else:
+                self.houseStateManager.change_office_curtain(rule_to_apply.curtain)
 
         if (rule_to_apply.light == actual_state.light):
-            self.devicesControl.change_device(rule_to_apply.light, "light", roomName)
+            if (roomName == "bedroom"):
+                self.houseStateManager.change_bedroom_light(rule_to_apply.light)
+            else:
+                self.houseStateManager.change_office_light(rule_to_apply.light)
 
         if (rule_to_apply.temperature == actual_state.temperature):
-            self.devicesControl.change_device(rule_to_apply.temperature, "light", roomName)
+            if (roomName == "bedroom"):
+                self.houseStateManager.change_bedroom_temperature(rule_to_apply.temperature)
+            else:
+                self.houseStateManager.change_office_temperature(rule_to_apply.temperature)
+
 
