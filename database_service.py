@@ -26,32 +26,6 @@ class DatabaseService(object):
         cur = db.execute('select room, user, light, temperature, hour, curtain from houseStates order by db_id')
         return self.parseQueryResultToList(cur.fetchall())
 
-    def save_house_state_rules(self, houseStateRules):
-        db = self.get_db()
-        if db is None:
-            return False
-        for houseStateRule in houseStateRules:
-            for user in houseStateRule.users:
-                db.execute('insert into houseStateRules (room, user , light, temperature, hour) values (?, ?, ?, ?, ?)', [
-                houseStateRule.room, user, houseStateRule.light, houseStateRule.temperature, houseStateRule.hour
-                ])
-                db.commit()
-        return True
-
-    def get_house_state_rules(self):
-        db = self.get_db()
-        if db is None:
-            return False
-        cur = db.execute('select room, user, light, temperature, hour from houseStateRules order by db_id')
-        return self.parseQueryResultToList(cur.fetchall())
-
-    def delete_all_house_state_rules(self):
-        db = self.get_db()
-        if db is None:
-            return False
-        db.execute('delete * from houseStateRules')
-        return True
-
     def parseQueryResultToList(resultFromDb):
         result = list()
         for row in resultFromDb:
@@ -63,4 +37,9 @@ class DatabaseService(object):
             currentRow["hour"] = row[4]
             currentRow["curtain"] = row[5]
             result.append(currentRow)
-        return result
+
+        rowsList = []
+        for row in result:
+            rowsList.append(row['user'], row['room'], row['hour'], row['light'], row['temperature'], row['curtain'])
+
+        return pandaLibrary.DataFrame(rowsList, columns=['user', 'room', 'hour', 'light', 'temperature', 'curtain'])
