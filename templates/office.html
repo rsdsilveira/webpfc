@@ -5,32 +5,20 @@
 		<fieldset>
 			<legend>Dispositivos</legend>
 				Lampada:
-					<div class="onoffswitch">
-						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="lightonoffswitch" checked>
-						<label class="onoffswitch-label" for="lightonoffswitch" >
-							<span class="onoffswitch-inner" id="light-status"></span>
-							<span class="onoffswitch-switch"></span>
-						</label>
-					</div>
+					<div>
+					    <input type="checkbox" name="my-checkbox" checked>
+                    </div>
 					<br/>
 				Cortina:
-					<div class="onoffswitch">
-						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="curtainonoffswitch" checked>
-						<label class="onoffswitch-label" for="curtainonoffswitch">
-							<span class="onoffswitch-inner"></span>
-							<span class="onoffswitch-switch"></span>
-						</label>
-					</div>
+                    <div>
+					    <input type="checkbox" name="my-checkbox" checked>
+                    </div>
 					<br/>
 				Ar Condicionado:
 					<div >
-						<div class="onoffswitch">
-							<input type="checkbox" name="onoffswitch" onchange="toogleTemperatureControl()" class="onoffswitch-checkbox" id="temperatureonoffswitch" checked>
-							<label class="onoffswitch-label" for="temperatureonoffswitch">
-								<span class="onoffswitch-inner"></span>
-								<span class="onoffswitch-switch"></span>
-							</label>
-						</div>
+						<div>
+					        <input type="checkbox" name="my-checkbox" checked>
+                        </div>
 						<br/>
 						<input id="temperatureControl" type="range" list="possibleTemperatures" min="17" max="25" 
 						oninput="showVal(this.value)" onchange="showVal(this.value)" />
@@ -49,6 +37,8 @@
 					</div>
 					
 			<script>
+                $("[name='my-checkbox']").bootstrapSwitch();
+
 				function showVal(val){
 					
 					document.getElementById('showTemperature').value=val;
@@ -82,7 +72,7 @@
 
             <br/>
             <div>
-                <table id="usersList">
+                <table id="usersList" class="table">
 
                 </table>
             </div>
