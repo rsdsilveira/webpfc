@@ -6,7 +6,8 @@ from Model.room_state import RoomStateRule
 import database_service
 import pickle
 import pandas as PandasLibrary
-from model import *
+import os
+from Model import *
 from sklearn import tree
 
 class HouseStateRulesManager(object):
@@ -14,10 +15,6 @@ class HouseStateRulesManager(object):
         self.databaseService = database_service.DatabaseService()
 
     def create_rules(self):
-        rules = self.databaseService.get_house_states()
-        self.databaseService.save_house_state_rules(self.new_rules_algotithm())
-
-    def new_rules_algotithm(self):
         history = self.databaseService.get_house_states()
 
         roomNames = ["office", "bedroom"]
@@ -29,10 +26,10 @@ class HouseStateRulesManager(object):
                 treeResult.fit(history.filter(regex= 'user|room|hour'), history.filter(regex= deviceName))
                 with open(deviceName + '.plk', 'wb') as f:
                     pickle.dump(treeResult, f)
+                self.exportDecisionTreeToPDF(treeResult, deviceName, device)
 
     def getHouseStateRules(self, roomState):
         roomName = "office" if roomState.room == 0 else "bedroom"
-        # na linha abaixo coloquei roomState.users[0], mas e se um roomState tem mais de um user?
         decisionTreeEntries = [roomState.users[0],roomState.room, roomState.hour]
         roomStateRuleResult = RoomStateRule()
         
@@ -52,8 +49,26 @@ class HouseStateRulesManager(object):
             f.close()
             
         roomStateRuleResult.hour = roomState.hour
-        # na linha abaixo coloquei roomState.users[0], mas e se um roomState tem mais de um user?
         roomStateRuleResult.user = roomState.users[0]
         roomStateRuleResult.room = roomState.room
         
-        return roomStateRuleResult            
+        return roomStateRuleResult
+
+    def exportDecisionTreeToPDF(self, decisionTree, treeName, targetedVariableNameFromTree):
+        fileName = treeName + '.dot'
+        with open(fileName,'w') as f:
+            f = decisionTree.export_graphviz(clf, out_file = f, feature_names = ['usuario','comodo','hora',targetedVariableNameFromTree])
+
+        os.system("dot -Tpdf" + fileName + " -o " + treeName + ".pdf")
+        os.unlink(fileName)
+
+
+
+
+
+
+
+
+
+
+
