@@ -2,8 +2,10 @@
 <title>PFC</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='bootstrap-min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap-switch.min.css')}}">
 <script type="text/javascript" src="{{url_for('static', filename='jquery.js') }}"></script>
 <script type="text/javascript" src="{{url_for('static',filename='bootstrap-min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static',filename='bootstrap-switch.min.js')}}"></script>
 <script> $SCRIPT_ROOT = {{ request.script_root|tojson|safe}};</script>
 <div class="page">
       
