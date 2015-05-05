@@ -28,7 +28,7 @@ class DevicesControl(object):
 
         port.flushInput()
         port.flushOutput()
-        time.sleep(2)
+        time.sleep(3)
         return port
 
 
