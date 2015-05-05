@@ -205,7 +205,7 @@ def bedroom_temperature_update(new_temperature):
     houseStateManager.change_bedroom_temperature(new_temperature)
     return jsonify(value=new_temperature)
 
-@app.route('/office/add/<user>')
+@app.route('/office/add/<new_user>')
 def add_user_to_office(new_user):
     office_state = houseStateManager.get_current_office_state()
     office_state.users.append(new_user)
@@ -219,8 +219,16 @@ def remove_user_from_office(user):
     office_state = houseStateManager.get_current_office_state()
     office_state.users.remove(user)
     houseStateManager.save_current_office_state()
+    return jsonify(value=True)
 
-
+@app.route('/monitor')
+def periodic_monitoring():
+    office_state = houseStateManager.get_current_office_state()
+    houseStateManager.save_house_state_in_db(office_state)
+    bedroom_state = houseStateManager.get_current_bedroom_state()
+    houseStateManager.save_house_state_in_db(bedroom_state)
+    decisionService.make_decision(office_state)
+    decisionService.make_decision(bedroom_state)
 
 
 ####### ------------------------ INITIALIZE ----------------------------- #######
