@@ -96,12 +96,14 @@ def add_more_stubs():
     with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
         db.cursor().executescript(fileToFillStubs.read())
         db.commit()
+    return jsonify(value="true")
 
 @app.route('/stubs/clear')
 def clear_stubs():
     db = get_db()
-    db.execute("DELETE FROM  WHERE db_id > -1")
+    db.execute("DELETE FROM houseStates WHERE db_id > -1")
     db.commit()
+    return jsonify(value="true")
 
 @app.route('/devices/panel')
 def show_devices_panel():
@@ -151,14 +153,39 @@ def get_status_for_devices():
 @app.route('/status/user')
 def get_status_for_user():
     cache = SimpleCache()
-    localization = cache.get("user_localization") 			
-    return jsonify(value=localization)   
-						
+    localization = cache.get("user_localization")
+    return jsonify(value=localization)
+
+
+                                    # ------------------- learning ---------------------
+
+
+@app.route('/trigger-decision')
+def trigger_decision():
+    decisionService.make_decision(houseStateManager.get_current_office_state())
+    decisionService.make_decision(houseStateManager.get_current_bedroom_state())
+    return jsonify(value="true")
+
+@app.route('/create-trees')
+def create_trees():
+    decisionService.houseStateRulesManager.create_rules()
+    return jsonify(value="true")
+
+@app.route('/export-decision-tree/<treeName>')
+def export_decision_tree(treeName):
+    with open(treeName, 'w') as f:
+        response = f
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = \
+            'inline; filename=%s.pdf' % treeName
+        return response
+
+
 									# 	------------------- house ---------------------
-    
-      
-      
-      
+
+
+
+
 @app.route('/house/panel')
 def show_house_panel():
     if(SimpleCache().get("user_localization") is None):

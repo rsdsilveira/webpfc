@@ -17,19 +17,26 @@ class DecisionService(object):
         actual_state = self.houseStateManager.__get_current_office_state() if roomName == "office" else self.houseStateManager.get_current_bedroom_state()
         rule_to_apply = self.houseStateRulesManager.get_room_rule_to_apply(roomState)
 
-        if(rule_to_apply.curtain == actual_state.curtain):
+        if(rule_to_apply.curtain != actual_state.curtain):
+            print roomName + " " + "curtain: " + "de " + actual_state.curtain + " para "
+            rule_to_apply.curtain
             if(roomName == "bedroom"):
                 self.houseStateManager.change_bedroom_curtain(rule_to_apply.curtain)
             else:
                 self.houseStateManager.change_office_curtain(rule_to_apply.curtain)
 
-        if (rule_to_apply.light == actual_state.light):
+        if (rule_to_apply.light != actual_state.light):
+            print roomName + " " + "light: " + "de " + actual_state.light + " para "
+            rule_to_apply.light
             if (roomName == "bedroom"):
                 self.houseStateManager.change_bedroom_light(rule_to_apply.light)
             else:
                 self.houseStateManager.change_office_light(rule_to_apply.light)
 
-        if (rule_to_apply.temperature == actual_state.temperature):
+
+        if (rule_to_apply.temperature != actual_state.temperature):
+            print roomName + " " + "temperature: " + "de " + actual_state.temperature + " para "
+            rule_to_apply.temperature
             if (roomName == "bedroom"):
                 self.houseStateManager.change_bedroom_temperature(rule_to_apply.temperature)
             else:
