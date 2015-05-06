@@ -28,7 +28,7 @@ class DatabaseService(object):
         cur = db.execute('select room, userName, light, temperature, hourOfDay, curtain from houseStates order by db_id')
         return self.__parse_query_result_to_data_frame(cur.fetchall())
 
-    def __parse_query_result_to_data_frame(resultFromDb):
+    def __parse_query_result_to_data_frame(self, resultFromDb):
         result = list()
         for row in resultFromDb:
             currentRow = {}
@@ -42,6 +42,6 @@ class DatabaseService(object):
 
         rowsList = []
         for row in result:
-            rowsList.append(row['user'], row['room'], row['hour'], row['light'], row['temperature'], row['curtain'])
+            rowsList.append([row['userName'], row['room'], row['hourOfDay'], row['light'], row['temperature'], row['curtain']])
 
-        return PandaLibrary.DataFrame(rowsList, columns=['user', 'room', 'hour', 'light', 'temperature', 'curtain'])
+        return DataFrame(rowsList, columns=['user', 'room', 'hour', 'light', 'temperature', 'curtain'])

@@ -4,9 +4,9 @@
 --  TEMPERATURE:  off = 0, on = 1
 --  CURTAIN: off = 0, on = 1
 
--- gera 2048 rows aleatorias válidas dentro do dominio do projeto
+-- gera muitas rows aleatorias válidas dentro do dominio do projeto
 insert into houseStates(room, userName, hourOfDay, light, temperature, curtain)
-  SELECT abs(random() % 2), abs(random() % 5), abs(random() % 2), abs(random() % 2), abs(random() % 30) - abs(random() % 10), abs(random() % 2)
+  SELECT abs(random() % 2), abs(random() % 5), abs(random() % 2), abs(random() % 2),  17 + abs(random() % 14), abs(random() % 2)
    FROM (SELECT * FROM (
          (SELECT 0 UNION ALL SELECT 1) t2,
          (SELECT 0 UNION ALL SELECT 1) t4,

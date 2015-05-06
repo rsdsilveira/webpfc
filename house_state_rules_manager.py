@@ -17,13 +17,13 @@ class HouseStateRulesManager(object):
 
         roomNames = ["office", "bedroom"]
         for roomName in roomNames:
-            devices = ["Light","Temperature","Curtain"]
+            devices = ["light","temperature","curtain"]
             for device in devices:
                 deviceName = roomName + device
                 roomIndex = 0 if roomName == "office" else 1
-                roomHistory = history.loc[history['room'] == roomIndex]
-                treeResult = tree.DecisionTreeClassifier(criterion="entropy")
-                treeResult.fit(roomHistory.filter(regex= 'user|room|hour'), roomHistory.filter(regex= deviceName), max_depth = 20)
+                roomHistory = history[history['room'] == roomIndex]
+                treeResult = tree.DecisionTreeClassifier(criterion="entropy", max_depth = 20)
+                treeResult.fit(roomHistory.filter(regex= 'user|room|hour').values, roomHistory.filter(regex= device).values)
                 with open(deviceName + '.plk', 'wb') as f:
                     pickle.dump(treeResult, f)
                 self.export_decision_tree_to_PDF(treeResult, deviceName, device)
@@ -31,21 +31,21 @@ class HouseStateRulesManager(object):
     def get_room_rule_to_apply(self, roomState):
         roomName = "office" if roomState.room == 0 else "bedroom"
         decisionTreeEntries = [roomState.users[0],roomState.room, roomState.hour]
-        roomStateRuleResult = RoomStateRule()
+        roomStateRuleResult = RoomStateRule(0,0,0,0,0,0)
         
-        with open(roomName + "Light" + '.plk', 'rb') as f:
+        with open(roomName + "light" + '.plk', 'rb') as f:
             decisionTree = pickle.load(f)
-            roomStateRuleResult.light = decisionTree.Predict(decisionTreeEntries)[0]
+            roomStateRuleResult.light = decisionTree.predict(decisionTreeEntries)[0]
             f.close()
 
-        with open(roomName + "Temperature" + '.plk', 'rb') as f:
+        with open(roomName + "temperature" + '.plk', 'rb') as f:
             decisionTree = pickle.load(f)
-            roomStateRuleResult.temperature = decisionTree.Predict(decisionTreeEntries)[0]
+            roomStateRuleResult.temperature = decisionTree.predict(decisionTreeEntries)[0]
             f.close()
             
-        with open(roomName + "Curtain" + '.plk', 'rb') as f:
+        with open(roomName + "curtain" + '.plk', 'rb') as f:
             decisionTree = pickle.load(f)
-            roomStateRuleResult.curtain = decisionTree.Predict(decisionTreeEntries)[0]
+            roomStateRuleResult.curtain = decisionTree.predict(decisionTreeEntries)[0]
             f.close()
             
         roomStateRuleResult.hour = roomState.hour
@@ -57,9 +57,9 @@ class HouseStateRulesManager(object):
     def export_decision_tree_to_PDF(self, decisionTree, treeName, targetedVariableNameFromTree):
         fileName = treeName + '.dot'
         with open(fileName,'w') as f:
-            decisionTree.export_graphviz(decisionTree, out_file = f, feature_names = ['usuario','comodo','hora',targetedVariableNameFromTree])
+            f = tree.export_graphviz(decisionTree, out_file = f, feature_names = ['usuario','comodo','hora',targetedVariableNameFromTree])
 
-        os.system("dot -Tpdf" + fileName + " -o " + treeName + ".pdf")
+        os.system("dot -Tpdf " + fileName + " -o " + treeName + ".pdf")
         os.unlink(fileName)
 
 

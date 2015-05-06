@@ -3,7 +3,7 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, jsonify, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, make_response
 from werkzeug.contrib.cache import SimpleCache
 
 import house_state_manager
@@ -173,8 +173,8 @@ def create_trees():
 
 @app.route('/export-decision-tree/<treeName>')
 def export_decision_tree(treeName):
-    with open(treeName, 'w') as f:
-        response = f
+    with open(treeName, 'rb') as f:
+        response = make_response(f)
         response.headers['Content-Type'] = 'application/pdf'
         response.headers['Content-Disposition'] = \
             'inline; filename=%s.pdf' % treeName

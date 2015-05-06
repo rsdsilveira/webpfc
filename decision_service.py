@@ -8,7 +8,6 @@ class DecisionService(object):
     def __init__(self):
         self.houseStateRulesManager = house_state_rules_manager.HouseStateRulesManager()
         self.houseStateManager = house_state_manager.HouseStateManager()
-        self.devicesControl = devices_control.DevicesControl()
 
 
     def make_decision(self,  roomState):
@@ -18,16 +17,16 @@ class DecisionService(object):
         rule_to_apply = self.houseStateRulesManager.get_room_rule_to_apply(roomState)
 
         if(rule_to_apply.curtain != actual_state.curtain):
-            print roomName + " " + "curtain: " + "de " + actual_state.curtain + " para "
-            rule_to_apply.curtain
+            print roomName + " " + "curtain: " + "de " + str(actual_state.curtain) + " para "
+            str(rule_to_apply.curtain)
             if(roomName == "bedroom"):
                 self.houseStateManager.change_bedroom_curtain(rule_to_apply.curtain)
             else:
                 self.houseStateManager.change_office_curtain(rule_to_apply.curtain)
 
         if (rule_to_apply.light != actual_state.light):
-            print roomName + " " + "light: " + "de " + actual_state.light + " para "
-            rule_to_apply.light
+            print roomName + " " + "light: " + "de " + str(actual_state.light) + " para "
+            str(rule_to_apply.light)
             if (roomName == "bedroom"):
                 self.houseStateManager.change_bedroom_light(rule_to_apply.light)
             else:
@@ -35,8 +34,8 @@ class DecisionService(object):
 
 
         if (rule_to_apply.temperature != actual_state.temperature):
-            print roomName + " " + "temperature: " + "de " + actual_state.temperature + " para "
-            rule_to_apply.temperature
+            print roomName + " " + "temperature: " + "de " + str(actual_state.temperature) + " para "
+            str(rule_to_apply.temperature)
             if (roomName == "bedroom"):
                 self.houseStateManager.change_bedroom_temperature(rule_to_apply.temperature)
             else:
