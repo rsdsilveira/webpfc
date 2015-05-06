@@ -1,7 +1,7 @@
 __author__ = 'Kaike'
 
 from sqlite3 import dbapi2 as sqlite3
-from pandas import PandaLibrary
+from pandas import *
 
 
 class DatabaseService(object):
