@@ -46,9 +46,7 @@ def init_db():
     with app.open_resource('schema.sql', mode='r') as fileToCreateTables:
         db.cursor().executescript(fileToCreateTables.read())
         db.commit()
-    with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
-        db.cursor().executescript(fileToFillStubs.read())
-        db.commit()
+
     
 
 ####### ------------------------ ROUTES ----------------------------- #######
@@ -92,6 +90,18 @@ def get_devicesFromDb():
     cur = db.execute('select name, mask, micro_id, kind, localization, status from devices order by db_id')
     return cur.fetchall()
 
+@app.route('/stubs/more')
+def add_more_stubs():
+    db = get_db()
+    with app.open_resource('stubs.sql', mode='r') as fileToFillStubs:
+        db.cursor().executescript(fileToFillStubs.read())
+        db.commit()
+
+@app.route('/stubs/clear')
+def clear_stubs():
+    db = get_db()
+    db.execute("DELETE FROM  WHERE db_id > -1")
+    db.commit()
 
 @app.route('/devices/panel')
 def show_devices_panel():
@@ -205,7 +215,7 @@ def bedroom_temperature_update(new_temperature):
     houseStateManager.change_bedroom_temperature(new_temperature)
     return jsonify(value=new_temperature)
 
-@app.route('/office/add/<new_user>')
+@app.route('/office/add/<user>')
 def add_user_to_office(new_user):
     office_state = houseStateManager.get_current_office_state()
     office_state.users.append(new_user)
@@ -219,16 +229,8 @@ def remove_user_from_office(user):
     office_state = houseStateManager.get_current_office_state()
     office_state.users.remove(user)
     houseStateManager.save_current_office_state()
-    return jsonify(value=True)
 
-@app.route('/monitor')
-def periodic_monitoring():
-    office_state = houseStateManager.get_current_office_state()
-    houseStateManager.save_house_state_in_db(office_state)
-    bedroom_state = houseStateManager.get_current_bedroom_state()
-    houseStateManager.save_house_state_in_db(bedroom_state)
-    decisionService.make_decision(office_state)
-    decisionService.make_decision(bedroom_state)
+
 
 
 ####### ------------------------ INITIALIZE ----------------------------- #######

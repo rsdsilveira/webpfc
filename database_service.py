@@ -1,6 +1,8 @@
 __author__ = 'Kaike'
 
 from sqlite3 import dbapi2 as sqlite3
+from pandas import PandaLibrary
+
 
 class DatabaseService(object):
     DATABASE = 'database.db'
@@ -13,7 +15,7 @@ class DatabaseService(object):
         if db is None:
             return False
         for user in houseState.users:
-            db.execute('insert into houseStates (room, user , light, temperature, hour, curtain) values (?, ?, ?, ?, ?)', [
+            db.execute('insert into houseStates (room, userName , light, temperature, hourOfDay, curtain) values (?, ?, ?, ?, ?)', [
             houseState.room, user, houseState.light, houseState.temperature, houseState.hour, houseState.curtain
             ])
             db.commit()
@@ -23,7 +25,7 @@ class DatabaseService(object):
         db = self.get_db()
         if db is None:
             return False
-        cur = db.execute('select room, user, light, temperature, hour, curtain from houseStates order by db_id')
+        cur = db.execute('select room, userName, light, temperature, hourOfDay, curtain from houseStates order by db_id')
         return self.__parse_query_result_to_data_frame(cur.fetchall())
 
     def __parse_query_result_to_data_frame(resultFromDb):
@@ -31,10 +33,10 @@ class DatabaseService(object):
         for row in resultFromDb:
             currentRow = {}
             currentRow["room"] = row[0]
-            currentRow["user"] = row[1]
+            currentRow["userName"] = row[1]
             currentRow["light"] = row[2]
             currentRow["temperature"] = row[3]
-            currentRow["hour"] = row[4]
+            currentRow["hourOfDay"] = row[4]
             currentRow["curtain"] = row[5]
             result.append(currentRow)
 
@@ -42,4 +44,4 @@ class DatabaseService(object):
         for row in result:
             rowsList.append(row['user'], row['room'], row['hour'], row['light'], row['temperature'], row['curtain'])
 
-        return pandaLibrary.DataFrame(rowsList, columns=['user', 'room', 'hour', 'light', 'temperature', 'curtain'])
+        return PandaLibrary.DataFrame(rowsList, columns=['user', 'room', 'hour', 'light', 'temperature', 'curtain'])

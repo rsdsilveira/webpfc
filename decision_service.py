@@ -14,7 +14,7 @@ class DecisionService(object):
     def make_decision(self,  roomState):
         roomName = "office" if roomState.room == 0 else "bedroom"
 
-        actual_state = self.houseStateManager.get_current_office_state() if roomName == "office" else self.houseStateManager.get_current_bedroom_state()
+        actual_state = self.houseStateManager.__get_current_office_state() if roomName == "office" else self.houseStateManager.get_current_bedroom_state()
         rule_to_apply = self.houseStateRulesManager.get_room_rule_to_apply(roomState)
 
         if(rule_to_apply.curtain == actual_state.curtain):

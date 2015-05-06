@@ -1,11 +1,30 @@
-insert into devices (name, mask, micro_id, kind, localization, status) values ("luz branca", "mascara_luz", 1, "lampada", "sala", "off");
-insert into devices (name, mask, micro_id, kind, localization, status) values ("luz vermelha", "mascara_luz", 2, "lampada", "quarto", "off");
-insert into devices (name, mask, micro_id, kind, localization, status) values ("sensor temperatura", "mascara_temp", 3, "sensor temp", "sala", "22");
-insert into devices (name, mask, micro_id, kind, localization, status) values ("sensor luminosidade", "mascara_lumin", 4, "sensor lumin", "sala", "45");
-insert into devices (name, mask, micro_id, kind, localization, status) values ("luz branca", "mascara_luz", 5, "lampada", "cozinha", "off");
+--  ROOMS:  office = 0, bedroom = 1
+--  USERS:  nobody = 0, silveira = 1, carlos = 2, cesar = 3, guest = 4
+--  LIGHT:  off = 0, on = 1
+--  TEMPERATURE:  off = 0, on = 1
+--  CURTAIN: off = 0, on = 1
 
-insert into events (status, operator, mic_id, occurred_at) values ("on", "rafael", 2, "2014-10-10T15:10:55.299");
-insert into events (status, operator, mic_id, occurred_at) values ("off", "rafael", 2, "2014-10-10T15:12:55.299");
-insert into events (status, operator, mic_id, occurred_at) values ("on", "rafael", 1, "2014-10-10T15:16:55.299");
-insert into events (status, operator, mic_id, occurred_at) values ("20", "rafael", 3, "2014-10-10T15:20:55.299");
-insert into events (status, operator, mic_id, occurred_at) values ("23", "rafael", 3, "2014-10-10T15:25:55.299");
+-- gera 2048 rows aleatorias válidas dentro do dominio do projeto
+insert into houseStates(room, userName, hourOfDay, light, temperature, curtain)
+  SELECT abs(random() % 2), abs(random() % 5), abs(random() % 2), abs(random() % 2), abs(random() % 30) - abs(random() % 10), abs(random() % 2)
+   FROM (SELECT * FROM (
+         (SELECT 0 UNION ALL SELECT 1) t2,
+         (SELECT 0 UNION ALL SELECT 1) t4,
+         (SELECT 0 UNION ALL SELECT 1) t8,
+         (SELECT 0 UNION ALL SELECT 1) t16,
+         (SELECT 0 UNION ALL SELECT 1) t32,
+         (SELECT 0 UNION ALL SELECT 1) t64,
+         (SELECT 0 UNION ALL SELECT 1) t128,
+         (SELECT 0 UNION ALL SELECT 1) t256,
+         (SELECT 0 UNION ALL SELECT 1) t512,
+         (SELECT 0 UNION ALL SELECT 1) t1024,
+         (SELECT 0 UNION ALL SELECT 1) t2048
+         )
+    ) LIMIT 246;
+
+
+
+
+
+
+

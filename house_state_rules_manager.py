@@ -5,9 +5,7 @@ __author__ = 'Kaike'
 from Model.room_state import RoomStateRule
 import database_service
 import pickle
-import pandas as PandasLibrary
 import os
-from Model import *
 from sklearn import tree
 
 class HouseStateRulesManager(object):
@@ -22,8 +20,10 @@ class HouseStateRulesManager(object):
             devices = ["Light","Temperature","Curtain"]
             for device in devices:
                 deviceName = roomName + device
+                roomIndex = 0 if roomName == "office" else 1
+                roomHistory = history.loc[history['room'] == roomIndex]
                 treeResult = tree.DecisionTreeClassifier(criterion="entropy")
-                treeResult.fit(history.filter(regex= 'user|room|hour'), history.filter(regex= deviceName))
+                treeResult.fit(roomHistory.filter(regex= 'user|room|hour'), roomHistory.filter(regex= deviceName))
                 with open(deviceName + '.plk', 'wb') as f:
                     pickle.dump(treeResult, f)
                 self.export_decision_tree_to_PDF(treeResult, deviceName, device)
@@ -57,7 +57,7 @@ class HouseStateRulesManager(object):
     def export_decision_tree_to_PDF(self, decisionTree, treeName, targetedVariableNameFromTree):
         fileName = treeName + '.dot'
         with open(fileName,'w') as f:
-            f = decisionTree.export_graphviz(clf, out_file = f, feature_names = ['usuario','comodo','hora',targetedVariableNameFromTree])
+            decisionTree.export_graphviz(decisionTree, out_file = f, feature_names = ['usuario','comodo','hora',targetedVariableNameFromTree])
 
         os.system("dot -Tpdf" + fileName + " -o " + treeName + ".pdf")
         os.unlink(fileName)
