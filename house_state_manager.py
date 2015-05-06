@@ -9,8 +9,8 @@ class HouseStateManager (object):
     def __init__(self):
         self.databaseService = database_service.DatabaseService
         self.devicesControl = devices_control.DevicesControl
-        self.save_current_office_state(room_state.RoomState("office", self.format_current_time(), 0, 0, 0, 0))
-        self.save_current_bedroom_state(room_state.RoomState("bedroom", self.format_current_time(), 0, 0, 0, 0))
+        self.save_current_office_state(room_state.RoomState("office", self.format_current_time(), range(1), 0, 0, 0))
+        self.save_current_bedroom_state(room_state.RoomState("bedroom", self.format_current_time(), range(1), 0, 0, 0))
 
     def save_current_office_state(self, houseState):
         houseState.hour = self.format_current_time()

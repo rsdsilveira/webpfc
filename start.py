@@ -186,39 +186,39 @@ def bedroom_devices_control():
 
 @app.route('/office/light/update/<new_light>')
 def office_light_update(new_light):
-    house_state_manager.HouseStateManager.change_office_light(new_light)
+    house_state_manager.HouseStateManager.change_office_light(int(new_light))
     return jsonify(value=new_light)
 
 @app.route('/bedroom/light/update/<new_light>')
 def bedroom_light_update(new_light):
-    houseStateManager.change_bedroom_light(new_light)
+    houseStateManager.change_bedroom_light(int(new_light))
     return jsonify(value=new_light)
 
 @app.route('/office/curtain/update/<new_curtain>')
 def office_curtain_update(new_curtain):
-    houseStateManager.change_office_curtain(new_curtain)
+    houseStateManager.change_office_curtain(int(new_curtain))
     return jsonify(value= new_curtain)
 
 @app.route('/bedroom/curtain/update/<new_curtain>')
 def bedroom_curtain_update(new_curtain):
-    houseStateManager.change_bedroom_curtain(new_curtain)
+    houseStateManager.change_bedroom_curtain(int(new_curtain))
     return jsonify(value= new_curtain)
 
 
 @app.route('/office/temperature/update/<new_temperature>')
 def office_temperature_update(new_temperature):
-    houseStateManager.change_office_temperature(new_temperature)
+    houseStateManager.change_office_temperature(int(new_temperature))
     return jsonify(value=new_temperature)
 
 @app.route('/bedroom/temperature/update/<new_temperature>')
 def bedroom_temperature_update(new_temperature):
-    houseStateManager.change_bedroom_temperature(new_temperature)
+    houseStateManager.change_bedroom_temperature(int(new_temperature))
     return jsonify(value=new_temperature)
 
-@app.route('/office/add/<user>')
+@app.route('/office/add/<new_user>')
 def add_user_to_office(new_user):
     office_state = houseStateManager.get_current_office_state()
-    office_state.users.append(new_user)
+    office_state.users.append(int(new_user))
     houseStateManager.save_current_office_state(office_state)
     if len(office_state.users) == 1:
         decisionService.make_decision(office_state)
@@ -227,7 +227,7 @@ def add_user_to_office(new_user):
 @app.route('/office/remove/<user>')
 def remove_user_from_office(user):
     office_state = houseStateManager.get_current_office_state()
-    office_state.users.remove(user)
+    office_state.users.remove(int(user))
     houseStateManager.save_current_office_state()
 
 
@@ -237,8 +237,8 @@ def remove_user_from_office(user):
 
 if __name__ == "__main__":
     init_db()
-    #app.run(host='200.20.121.234', port=2222, debug=True)
-    app.run(host='127.0.0.1', port=2222, debug=True)
+    app.run(host='192.168.0.24', port=2222, debug=True)
+    #app.run(host='127.0.0.1', port=2222, debug=True)
 
     with app.app_context():
         houseStateManager = house_state_manager()
