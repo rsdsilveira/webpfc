@@ -23,7 +23,7 @@ class HouseStateRulesManager(object):
                 roomIndex = 0 if roomName == "office" else 1
                 roomHistory = history.loc[history['room'] == roomIndex]
                 treeResult = tree.DecisionTreeClassifier(criterion="entropy")
-                treeResult.fit(roomHistory.filter(regex= 'user|room|hour'), roomHistory.filter(regex= deviceName))
+                treeResult.fit(roomHistory.filter(regex= 'user|room|hour'), roomHistory.filter(regex= deviceName), max_depth = 20)
                 with open(deviceName + '.plk', 'wb') as f:
                     pickle.dump(treeResult, f)
                 self.export_decision_tree_to_PDF(treeResult, deviceName, device)
