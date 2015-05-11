@@ -74,6 +74,15 @@
             <div>
                 <table id="usersList" class="table">
 
+                    {% for user in office_state.users %}
+				    <tr>
+
+                        <td> {{ users_names[loop.index-1] }} </td><td><button onclick=removeUser(this,{{user}})>Remover</button>
+                        </td>
+
+                    </tr>
+                    {% else %}
+                    {% endfor %}
                 </table>
             </div>
 
