@@ -11,6 +11,8 @@ import house_state_manager
 #from house_state_manager import HouseStateManager
 import decision_service
 import devices_control
+from Model.room_state import RoomState
+import datetime
 
 ####### ------------------ APP START CONFIGURATION -------------------- #######
 
@@ -205,7 +207,10 @@ def users_by_room():
 
 @app.route('/office')
 def office_devices_control():
-    return render_template("office.html")
+    current_office_state = RoomState(0, datetime.datetime.now(), [1,2], True, 19, False)
+    # current_office_state = houseStateManager.get_current_office_state()
+    users_names = getUsersNameById(current_office_state.users)
+    return render_template("office.html",office_state = current_office_state, users_names = users_names)
 
 @app.route('/bedroom')
 def bedroom_devices_control():
@@ -258,14 +263,29 @@ def remove_user_from_office(user):
     houseStateManager.save_current_office_state()
 
 
+def getUsersNameById(usersId):
+    users_name = []
+    for user_id in usersId:
+        if user_id == 0:
+            users_name.append('')
+        elif user_id == 1:
+            users_name.append('Silveira')
+        elif user_id == 2:
+            users_name.append('Carlos')
+        elif user_id == 3:
+            users_name.append('Cesar')
+        else:
+            users_name.append('Convidado')
+    return users_name
+
 
 
 ####### ------------------------ INITIALIZE ----------------------------- #######
 
 if __name__ == "__main__":
     init_db()
-    app.run(host='192.168.0.24', port=2222, debug=True)
-    #app.run(host='127.0.0.1', port=2222, debug=True)
+    #app.run(host='192.168.0.24', port=2222, debug=True)
+    app.run(host='127.0.0.1', port=2222, debug=True) ###Esse e o endereco de localhost
 
     with app.app_context():
         houseStateManager = house_state_manager()
