@@ -119,32 +119,23 @@ def add_device():
     if db is None:
         errorOcurred = {'controller' : 'add_device', 'details' : 'There is no connection with database'}
         return display_error(errorOcurred)
-        
+
     db.execute('insert into devices (name, mask, micro_id, kind, localization) values (?, ?, ?, ?, ?)', [
       request.form['name'],
-      request.form['mask'], 
-      request.form['micro_id'], 
-      request.form['kind'], 
+      request.form['mask'],
+      request.form['micro_id'],
+      request.form['kind'],
       request.form['localization']
       ])
-      
+
     db.commit()
     flash(' Inserido !!')
     return redirect(url_for('show_devices_panel'))
-    
-    
+
+
 									# 	-------- actions, events and states -----------
-    
-@app.route('/actions/do')
-def do_action_for_device():
-#			micro_id = request.args.get('micro_id',0, type=int)
-#			ocurred_date = date.now()
-#			# finge que interagiu
-#			# salva evento no banco - quem fez foi a casa entao operator = 1
-			# muda status no cache
-			return jsonify(result='A')
-			
-			
+
+
 @app.route('/status/all')
 def get_status_for_devices():
     
@@ -161,19 +152,26 @@ def get_status_for_user():
 
                                     # ------------------- learning ---------------------
 
+@app.route('learning/save-current-states')
+def save_current_states():
+    bedroomState = houseStateManager.get_current_bedroom_state()
+    officeState = houseStateManager.get_current_office_state()
+    houseStateManager.save_house_state_in_db(bedroomState)
+    houseStateManager.save_house_state_in_db(officeState)
+    return jsonify(value="true")
 
-@app.route('/trigger-decision')
+@app.route('learning/trigger-decision')
 def trigger_decision():
     decisionService.make_decision(houseStateManager.get_current_office_state())
     decisionService.make_decision(houseStateManager.get_current_bedroom_state())
     return jsonify(value="true")
 
-@app.route('/create-trees')
+@app.route('learning/create-trees')
 def create_trees():
     decisionService.houseStateRulesManager.create_rules()
     return jsonify(value="true")
 
-@app.route('/export-decision-tree/<treeName>')
+@app.route('learning/export-decision-tree/<treeName>')
 def export_decision_tree(treeName):
     with open(treeName, 'rb') as f:
         response = make_response(f)
@@ -184,8 +182,6 @@ def export_decision_tree(treeName):
 
 
 									# 	------------------- house ---------------------
-
-
 
 
 @app.route('/house/panel')

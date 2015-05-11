@@ -2,6 +2,7 @@ __author__ = 'Kaike'
 
 import time
 import serial
+from Model import room_state
 
 class DevicesControl(object):
 
@@ -9,10 +10,28 @@ class DevicesControl(object):
         return
 
     def change_device(self, value, deviceName, roomName):
-        port = self.getSerialPort()
-        serialMessage = self.getSerialMessageToSend(deviceName, roomName, value)
-        self.sendSerialMessage(port, serialMessage)
+        self.__port = self.__getSerialPort()
+        serialMessage = self.__getSerialMessageToSend(deviceName, roomName, value)
+        self.__sendSerialMessage(self.__port, serialMessage)
         return
+
+    def get_device_state(self, deviceName, roomName):
+        self.__port = self.__getSerialPort()
+        messageToGetStates = [chr(2), chr(1), chr(1), chr(1), chr(13)]
+        self.__sendSerialMessage(self.__port, messageToGetStates)
+
+        data = self.__port.read(200)
+        devicesArray = self.__transform_refresh_data_into_array(data)
+        stateFromCircuit = 0
+        deviceId = self.__get_device_id(deviceName, roomName)
+
+        if(devicesArray[0][0] == deviceId):
+            if(deviceId == 22 or deviceId == 26): # ar condicionado
+                stateFromCircuit = devicesArray[0][1]
+            else:
+                stateFromCircuit = 0 if devicesArray[0][1] == 1 else 1
+                
+        return stateFromCircuit
 
     def __sendSerialMessage(self,port, messageArray):
         time.sleep(0.5)
@@ -20,17 +39,21 @@ class DevicesControl(object):
             port.write(charSerial)
             time.sleep(0.1)
 
+    def __transform_refresh_data_into_array(self, data):
+        devicesArray = list()
+        if (len(data)) > 0:
+            deviceState = list()
+            for elem in data:
+                elementParsed = ord(elem)
+                if (elementParsed == 13):
+                    devicesArray.append(deviceState)
+                    deviceState = list()
+                else:
+                    deviceState.append(elementParsed)
+        else:
+            print ""
 
-    def __getSerialPort(self):
-        port = serial.Serial("/dev/ttyAMA0", baudrate = 115200, timeout = 3.0)
-        if(port.isOpen() == False):
-            port.open()
-
-        port.flushInput()
-        port.flushOutput()
-        time.sleep(3)
-        return port
-
+        return devicesArray
 
     def __getSerialMessageToSend(self, deviceName, roomName, valueToChange):
         serialMessage = []
@@ -49,8 +72,29 @@ class DevicesControl(object):
 
         return serialMessage
 
+    def __get_device_id(self, deviceName, roomName):
+        deviceId = 0
+        if (roomName == "bedroom" and deviceName == "light"):
+            deviceId = 1
+        if (roomName == "bedroom" and deviceName == "temperature"):
+            deviceId = 1
+        if (roomName == "bedroom" and deviceName == "curtain"):
+            deviceId = 1
+        if (roomName == "office" and deviceName == "light"):
+            deviceId = 1
+        if (roomName == "office" and deviceName == "temperature"):
+            deviceId = 1
+        if (roomName == "office" and deviceName == "curtain"):
+            deviceId = 1
 
+        return deviceId
 
+    def __getSerialPort(self):
+        port = serial.Serial("/dev/ttyAMA0", baudrate=115200, timeout=3.0)
+        if (port.isOpen() == False):
+            port.open()
 
-
-
+        port.flushInput()
+        port.flushOutput()
+        time.sleep(3)
+        return port
