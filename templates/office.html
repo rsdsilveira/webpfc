@@ -85,11 +85,6 @@
 
             <script>
 
-				function showSliderValue(val){
-
-
-				}
-
 				function toogleTemperatureControl(){
 					document.getElementById("temperature-control").disabled =
 						document.getElementById("temperature-control").disabled == true ?  false: true;
@@ -106,9 +101,9 @@
 				}
 
                 function updateLight(){
-                    newLight = true;
+                    newLight = 1;
                     if(document.getElementById("light-control").parentElement.classList.contains("off")){
-                        newLight = false;
+                        newLight = 0;
                     }
                     $.ajax({
                          url:baseUrl+"/light/update/"+newLight
@@ -117,9 +112,9 @@
                 }
 
                 function updateCurtain(){
-                    newLight = true;
+                    newLight = 1;
                     if(document.getElementById("curtain-control").parentElement.classList.contains("off")){
-                        newLight = false;
+                        newLight = 0;
                     }
                     $.ajax({
                          url:baseUrl+"/curtain/update/"+newLight
@@ -159,10 +154,10 @@
 
                 // initialize the saved room state
                 $(document).ready(function(){
-                    var light = $("#light-state").val() == 'True'? 'on' : 'off';
+                    var light = $("#light-state").val() == '1'? 'on' : 'off';
                     $("#light-control").bootstrapToggle(light);
 
-                    var curtain = $("#curtain-state").val() == 'True'? 'on' : 'off';
+                    var curtain = $("#curtain-state").val() == '1'? 'on' : 'off';
                     $("#curtain-control").bootstrapToggle(curtain);
 
                     var temperature = $("#temperature-state").val();

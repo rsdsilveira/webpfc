@@ -152,7 +152,7 @@ def get_status_for_user():
 
                                     # ------------------- learning ---------------------
 
-@app.route('learning/save-current-states')
+@app.route('/learning/save-current-states')
 def save_current_states():
     bedroomState = houseStateManager.get_current_bedroom_state()
     officeState = houseStateManager.get_current_office_state()
@@ -160,18 +160,18 @@ def save_current_states():
     houseStateManager.save_house_state_in_db(officeState)
     return jsonify(value="true")
 
-@app.route('learning/trigger-decision')
+@app.route('/learning/trigger-decision')
 def trigger_decision():
     decisionService.make_decision(houseStateManager.get_current_office_state())
     decisionService.make_decision(houseStateManager.get_current_bedroom_state())
     return jsonify(value="true")
 
-@app.route('learning/create-trees')
+@app.route('/learning/create-trees')
 def create_trees():
     decisionService.houseStateRulesManager.create_rules()
     return jsonify(value="true")
 
-@app.route('learning/export-decision-tree/<treeName>')
+@app.route('/learning/export-decision-tree/<treeName>')
 def export_decision_tree(treeName):
     with open(treeName, 'rb') as f:
         response = make_response(f)
@@ -195,15 +195,10 @@ def show_house_panel():
 
 
 # ------------ new controller ---------------
-@app.route('/users')
-def users_by_room():
-    if(SimpleCache().get("users_localizations") is None):
-        SimpleCache().set("users_localizations", "1")
-    #return render_template('house_panel.html')
+
 
 @app.route('/office')
 def office_devices_control():
-    #current_office_state = RoomState(0, datetime.datetime.now(), [1,2], True, 19, False)
     current_office_state = houseStateManager.get_current_office_state()
     users_names = getUsersNameById(current_office_state.users)
     return render_template("office.html",office_state = current_office_state, users_names = users_names)
@@ -214,7 +209,7 @@ def bedroom_devices_control():
 
 @app.route('/office/light/update/<new_light>')
 def office_light_update(new_light):
-    house_state_manager.HouseStateManager.change_office_light(int(new_light))
+    houseStateManager.change_office_light(int(new_light))
     return jsonify(value=new_light)
 
 @app.route('/bedroom/light/update/<new_light>')
@@ -256,7 +251,7 @@ def add_user_to_office(new_user):
 def remove_user_from_office(user):
     office_state = houseStateManager.get_current_office_state()
     office_state.users.remove(int(user))
-    houseStateManager.save_current_office_state()
+    houseStateManager.save_current_office_state(office_state)
 
 
 def getUsersNameById(usersId):
