@@ -207,8 +207,8 @@ def users_by_room():
 
 @app.route('/office')
 def office_devices_control():
-    current_office_state = RoomState(0, datetime.datetime.now(), [1,2], True, 19, False)
-    # current_office_state = houseStateManager.get_current_office_state()
+    #current_office_state = RoomState(0, datetime.datetime.now(), [1,2], True, 19, False)
+    current_office_state = houseStateManager.get_current_office_state()
     users_names = getUsersNameById(current_office_state.users)
     return render_template("office.html",office_state = current_office_state, users_names = users_names)
 
